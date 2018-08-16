@@ -1,9 +1,9 @@
 package com.example.karthi.authentication;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -15,14 +15,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthProvider;
 
 public class MainActivity extends AppCompatActivity {
 
     private EditText inputEmail, inputPassword;
     private Button btnSignIn, btnSignUp, btnResetPassword;
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks callBacks;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
+    public  String email,password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String email=inputEmail.getText().toString().trim();
-                String password=inputPassword.getText().toString().trim();
+                 email=inputEmail.getText().toString().trim();
+                 password=inputPassword.getText().toString().trim();
 
 
                 if(TextUtils.isEmpty(email)){
@@ -63,12 +65,23 @@ public class MainActivity extends AppCompatActivity {
 
                 char[] arr=email.toCharArray();
 
-                if(arr[0]>='0'&&arr[0]<='9'){
-                    if(arr[1]>='0'&&arr[1]<='9'){
-                        if(arr[2]>='0'&&arr[2]<='9'){
+                if(arr[1]>='0'&&arr[1]<='9'){
+                    if(arr[2]>='0'&&arr[2]<='9'){
+                        if(arr[3]>='0'&&arr[3]<='9'){
 
-                            btnSignUp.setText("SEND");
-                            phno(email,password);
+                            btnSignUp.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    Intent intent=new Intent(getBaseContext(),otp.class);
+                                    intent.putExtra("emailid",email);
+                                    intent.putExtra("password",password);
+                                    startActivity(intent);
+
+                                }
+                            });
+
+
 
                         }
                     }
@@ -78,9 +91,21 @@ public class MainActivity extends AppCompatActivity {
                     if(arr[1]>='a'&&arr[1]<='z' || arr[1]>='A'&&arr[1]<='Z'){
                         if(arr[2]>='a'&&arr[2]<='z' || arr[2]>='A'&&arr[2]<='Z'){
                             btnSignUp.setText("SIGN UP");
-                            reg(email,password);
+                            btnSignUp.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    reg(email,password);
+                                }
+                            });
+
                         }
                     }
+                }
+
+                else{
+
+                    Toast.makeText(MainActivity.this,"Enter valid email or phone number",Toast.LENGTH_SHORT).show();
+
                 }
 
 
@@ -111,15 +136,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void phno(String phno,String password){
-
-        progressBar.setVisibility(View.VISIBLE);
-
-        startActivity(new Intent(MainActivity.this,otp.class));
-
-
-
-    }
 
     public void reset(View view) {
 
