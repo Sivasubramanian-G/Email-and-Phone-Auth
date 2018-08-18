@@ -19,12 +19,12 @@ import com.google.firebase.auth.PhoneAuthProvider;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText inputEmail, inputPassword;
+    private EditText inputEmail, inputPassword,conPassword;
     private Button btnSignIn, btnSignUp, btnResetPassword;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks callBacks;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
-    public static String email,password;
+    public static String email,password,conpassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         btnSignUp=(Button) findViewById(R.id.register);
         inputEmail=(EditText) findViewById(R.id.emaill);
         inputPassword=(EditText) findViewById(R.id.password);
+        conPassword=(EditText) findViewById(R.id.conpass);
         progressBar =(ProgressBar) findViewById(R.id.progressBar);
         btnResetPassword=(Button) findViewById(R.id.resetpass);
 
@@ -46,68 +47,56 @@ public class MainActivity extends AppCompatActivity {
 
                  email=inputEmail.getText().toString();
                  password=inputPassword.getText().toString();
+                 conpassword=conPassword.getText().toString();
+
+                if(password.equals(conpassword)) {
+
+                    if(TextUtils.isEmpty(email)){
+
+                        Toast.makeText(getApplicationContext(),"Enter email or phone number!!!",Toast.LENGTH_SHORT).show();
+                        return;
+
+                    }
+                    if(TextUtils.isEmpty(password)){
+                        Toast.makeText(getApplicationContext(),"Enter password!!!",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if(password.length()<6){
+                        Toast.makeText(getApplicationContext(),"Password is too short, enter minimum 6 characters",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    char[] arr = email.toCharArray();
+
+                    if (arr[1] >= '0' && arr[1] <= '9') {
+                        if (arr[2] >= '0' && arr[2] <= '9') {
+                            if (arr[3] >= '0' && arr[3] <= '9') {
+
+                                Intent intent = new Intent(getBaseContext(), otp.class);
+                                startActivity(intent);
 
 
-                if(TextUtils.isEmpty(email)){
-
-                    Toast.makeText(getApplicationContext(),"Enter email or phone number!!!",Toast.LENGTH_SHORT).show();
-                    return;
-
-                }
-                if(TextUtils.isEmpty(password)){
-                    Toast.makeText(getApplicationContext(),"Enter password!!!",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(password.length()<6){
-                    Toast.makeText(getApplicationContext(),"Password is too short, enter minimum 6 characters",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                char[] arr=email.toCharArray();
-
-                if(arr[1]>='0'&&arr[1]<='9'){
-                    if(arr[2]>='0'&&arr[2]<='9'){
-                        if(arr[3]>='0'&&arr[3]<='9'){
-
-                            btnSignUp.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                    Intent intent=new Intent(getBaseContext(),otp.class);
-                                    /*intent.putExtra("emailid",email);
-                                    intent.putExtra("password",password);*/
-                                    startActivity(intent);
-
-                                }
-                            });
-
-
-
+                            }
                         }
                     }
-                }
 
-                if(arr[0]>='a'&&arr[0]<='z' || arr[0]>='A'&&arr[0]<='Z'){
-                    if(arr[1]>='a'&&arr[1]<='z' || arr[1]>='A'&&arr[1]<='Z'){
-                        if(arr[2]>='a'&&arr[2]<='z' || arr[2]>='A'&&arr[2]<='Z'){
-                            btnSignUp.setText("SIGN UP");
-                            btnSignUp.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    reg(email,password);
-                                }
-                            });
+                    else if (arr[0] >= 'a' && arr[0] <= 'z' || arr[0] >= 'A' && arr[0] <= 'Z') {
+                        if (arr[1] >= 'a' && arr[1] <= 'z' || arr[1] >= 'A' && arr[1] <= 'Z') {
+                            if (arr[2] >= 'a' && arr[2] <= 'z' || arr[2] >= 'A' && arr[2] <= 'Z') {
+                                reg(email, password);
 
+                            }
                         }
+                    } else {
+
+                        Toast.makeText(MainActivity.this, "Enter valid email or phone number", Toast.LENGTH_SHORT).show();
+
                     }
                 }
 
                 else{
-
-                    Toast.makeText(MainActivity.this,"Enter valid email or phone number",Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(MainActivity.this,"Passwords are not same",Toast.LENGTH_SHORT).show();
                 }
-
 
             }
         });
