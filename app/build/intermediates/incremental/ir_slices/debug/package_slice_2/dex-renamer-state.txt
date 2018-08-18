@@ -1,0 +1,4 @@
+#Sat Aug 18 14:48:30 IST 2018
+base.0=/home/siva/AndroidStudioProjects/Email-and-Phone-Auth/app/build/intermediates/transforms/dexMerger/debug/3
+path.0=classes.dex
+renamed.0=classes.dex
