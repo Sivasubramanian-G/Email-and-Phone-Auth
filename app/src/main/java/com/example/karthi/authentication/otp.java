@@ -20,7 +20,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.util.concurrent.TimeUnit;
 
-public class otp extends AppCompatActivity{
+public class otp extends MainActivity{
 
     private EditText otpin;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks callBacks;
@@ -29,7 +29,7 @@ public class otp extends AppCompatActivity{
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     public static String phonenumber,passwd;
     private Button btn;
-
+    public String phonenumber1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,22 +38,39 @@ public class otp extends AppCompatActivity{
 
         otpin = (EditText) findViewById(R.id.otp);
         btn=(Button) findViewById(R.id.button2);
-
-        phonenumber=getIntent().getStringExtra("emailid");
-        passwd=getIntent().getStringExtra("password");
+        MainActivity m = new MainActivity();
+        //phonenumber=getIntent().getStringExtra("emailid");
+        //passwd=getIntent().getStringExtra("password");
+        phonenumber = m.email;
+        passwd = m.password;
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                return;
+                Log.d("phoneauth","PhoneAuth going to execute");
+                otpin.setText(phonenumber);
+                //phonenumber1="+919488907642";
+                PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                        phonenumber,
+                        60,
+                        TimeUnit.SECONDS,
+                        otp.this,
+                        callBacks
+
+                );
+                Log.d("phoneauth","got pass phoneauth");
+                //return;
             }
         });
+
+
+
 
         mAuth = FirebaseAuth.getInstance();
         callBacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
 
-                create(phonenumber,passwd);
+                create();
 
             }
 
@@ -66,36 +83,23 @@ public class otp extends AppCompatActivity{
             public void onCodeSent(String verificationId,
                                    PhoneAuthProvider.ForceResendingToken token) {
 
-                mVerificationId = verificationId;
-                mResendToken = token;
+                //mVerificationId = verificationId;
+                //mResendToken = token;
 
             }
 
         };
-        Log.d("phoneauth","PhoneAuth going to execute");
-        otpin.setText(phonenumber);
-        String phonenumber1="+919488907642";
-
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                phonenumber1,
-                60,
-                TimeUnit.SECONDS,
-                otp.this,
-                callBacks
-
-        );
-        Log.d("phoneauth","got pass phoneauth");
 
 
     }
 
-    public void create(String phonenumber,String password){
+    public void create(){
 
         String email=phonenumber + "@gmail.com";
-        String passwrd=password;
+        //String passwrd=password;
         mAuth = FirebaseAuth.getInstance();
 
-        mAuth.createUserWithEmailAndPassword(email,passwrd).addOnCompleteListener(otp.this, new OnCompleteListener<AuthResult>() {
+        mAuth.createUserWithEmailAndPassword(email,passwd).addOnCompleteListener(otp.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 

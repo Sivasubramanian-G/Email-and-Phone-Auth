@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks callBacks;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
-    public  String email,password;
+    public static String email,password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                 email=inputEmail.getText().toString().trim();
-                 password=inputPassword.getText().toString().trim();
+                 email=inputEmail.getText().toString();
+                 password=inputPassword.getText().toString();
 
 
                 if(TextUtils.isEmpty(email)){
@@ -74,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
                                 public void onClick(View v) {
 
                                     Intent intent=new Intent(getBaseContext(),otp.class);
-                                    intent.putExtra("emailid",email);
-                                    intent.putExtra("password",password);
+                                    /*intent.putExtra("emailid",email);
+                                    intent.putExtra("password",password);*/
                                     startActivity(intent);
 
                                 }
